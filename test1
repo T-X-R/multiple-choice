@@ -1,0 +1,98 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
+#define MAX_LINE 1024
+
+struct answer
+{
+	char Ans;
+	char mark[10];
+	char explain[1000];
+}A[15];
+
+int main()
+{
+	char buf1[MAX_LINE];
+	char *p;
+	char buf2[MAX_LINE];
+	//char timu[MAX_LINE];
+	int len1,len2;
+
+	FILE *fp1=fopen("question.txt","r");
+	FILE *fp2=fopen("answer.txt","r");
+	if(fp1==NULL||fp2==NULL)
+	{
+		printf("文件打开失败！");
+	}
+
+	printf("单项选择题（每道题5分，多选错选均不得分，共有15道题，8道简单题，4道普通题，3道难题）:\n\n");
+
+	int k=0;
+	while(1)
+	{
+		p=fgets(buf1,MAX_LINE,fp1);
+		if(!p)	break;
+		printf("%s",buf1);
+		/*fscanf(fp1,"%c",&timu[k]);
+		k++;*/
+	}
+
+
+	/*for(int j=0;j<k;j++)
+	{
+		printf("%s\n",timu[j]);
+	}*/
+
+	int i=0;
+	while(fgets(buf2,MAX_LINE,fp2)!=NULL)
+	{
+		len2=strlen(buf2);
+		buf2[len2-1]='\0';
+		fscanf(fp2,"%c%s%s",&A[i].Ans,A[i].mark,A[i].explain);
+		i++;
+	}
+
+	/*for(int j=0;j<15;j++)
+		printf("%s\n",A[j].mark);*/
+
+	fclose(fp1);
+	fclose(fp2);
+
+	char choose[15];
+
+	printf("请输入您的选项：\n\n");
+	for(int j=0;j<15;j++)
+	{
+		scanf("%c",&choose[j]);
+	}
+
+	/*for(int j=0;j<15;j++)
+	{
+		printf("%c ",choose[j]);
+	}*/
+
+	int easy=0,normal=0,hard=0;
+	int score=0;
+	for(int j=0;j<15;j++)
+	{
+		if(choose[j]==A[j].Ans)
+		{
+			score=score+5;
+			if(strcmp(A[j].mark,"easy"))	easy++;
+			else if(strcmp(A[j].mark,"normal"))	normal++;
+			else if(strcmp(A[j].mark,"hard"))	hard++;
+		}
+		else if(choose[j]!=A[j].Ans)
+		{
+			printf("\n第%d题、您的选项为：%c	正确选项为：%c\n解析：%s\n",j+1,choose[j],A[j].Ans,A[j].explain);
+		}
+	}
+	printf("\n");
+
+	printf("您的成绩是：%d分\n",score);
+	printf("您的正确率为：%.2lf%%\n",score/75.0*100);
+	printf("您的简单题正确率为：%.2lf%%\n",double(easy)/8.0*100);
+	printf("您的普通题正确率为：%.2lf%%\n",double(normal)/4*100);
+	printf("您的难题正确率为：%.2lf%%\n",double(hard)/3*100);
+ }
